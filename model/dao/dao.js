@@ -1,4 +1,7 @@
-var schemas = require('./../schemas/schemas');
+/*jslint node: true */
+"use strict";
+
+var schemas = require("./../schemas/schemas");
 
 var WordsModel = schemas.WordsModel;
 var error = {

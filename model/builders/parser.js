@@ -1,9 +1,12 @@
-var async = require('async');
-var dao = require('../dao/dao');
+/*jslint node: true */
+"use strict";
+
+var async = require("async");
+var dao = require("../dao/dao");
 
 function removeInvalidCharacters(data) {
-    data.toLocaleLowerCase();
-    return data.split(/[" "=:?!,*%()@$^&_=-]/);
+
+    return data.toLocaleLowerCase().replace(/[&\/\\#,+()$~%.!'":*?<>{}]/g,'').split(" ");
 }
 
 
@@ -52,13 +55,13 @@ exports.searchCvWords = function (words, data, callback) {
                         results.push({
                             name: word,
                             years: yearsArr.sum() // sum the years and return the result
-                        })
+                        });
                     }
                     callbackAsync();
                 } else {
                     return new Error("error in get data from db");
                 }
-            })
+            });
 
         },
         // 3rd param is the function to call when everything is done

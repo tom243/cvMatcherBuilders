@@ -1,3 +1,6 @@
+/*jslint node: true */
+"use strict";
+
 exports.sendErrorValidation = function (res) {
     var error = {
         error: "the value of fields is incorrect or undefined"
@@ -13,5 +16,5 @@ if(!Array.prototype.sum) { // expand Array class and add sum function
             sum += current;
         });
         return sum;
-    }
+    };
 }

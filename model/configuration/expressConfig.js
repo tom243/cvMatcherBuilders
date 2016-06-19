@@ -1,5 +1,8 @@
-var express = require('express');
-var bodyParser = require('body-parser');
+/*jslint node: true */
+"use strict";
+
+var express = require("express");
+var bodyParser = require("body-parser");
 
 var error = {
     error: null
@@ -20,7 +23,7 @@ module.exports = function() {
         }
     });
 
-    app.use('/', express.static('./public'));
+    app.use("/", express.static("./public"));
 
     app.use(function (req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
@@ -28,7 +31,7 @@ module.exports = function() {
         next();
     });
 
-    require ('./../routes/routes')(app);
+    require ("./../routes/routes")(app);
 
     return app;
 };

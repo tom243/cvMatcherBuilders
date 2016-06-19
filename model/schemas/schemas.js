@@ -2,7 +2,10 @@
  * Created by Tomer on 6/15/2016.
  */
 
-var mongoose = require('mongoose');
+/*jslint node: true */
+"use strict";
+
+var mongoose = require("mongoose");
 
 var words_schema = mongoose.Schema;
 
@@ -11,6 +14,6 @@ var wordsSchema = new words_schema({
 
     synonyms: [String]
 
-}, {collection: 'SynonymsKeyWords'});
+}, {collection: "SynonymsKeyWords"});
 
-exports.WordsModel = mongoose.model('wordsModel', wordsSchema);
+exports.WordsModel = mongoose.model("wordsModel", wordsSchema);

@@ -1,3 +1,6 @@
+/*jslint node: true */
+"use strict";
+
 var utils = require("./../model/utils/utils");
 var validation = require("./../model/utils/validation");
 var parser = require("../model/builders/parser");
@@ -12,7 +15,7 @@ exports.findIfKeyWordsExistsCV = function (req, res) {
         parser.searchCvWords(req.body.words, req.body.expereince, function (status, results) {
             console.log("results ", results);
             res.status(status).json(results);
-        })
+        });
 
     } else {
         utils.sendErrorValidation(res);
