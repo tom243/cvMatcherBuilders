@@ -6,21 +6,57 @@ var dao = require("../dao/dao");
 
 function removeInvalidCharacters(data) {
 
-    return data.toLocaleLowerCase().replace(/[\/\\#,()$~%.!'":*?<>{}]/g,' ').split(" ");
+    return data.toLocaleLowerCase().replace(/[\u2022,\u2023,\u25E6,\u2043,\u2219\/\\,()$~%.!'":*?<>{}]/g, ' ').split(" ");
 }
 
 
 exports.searchJobWords = function (words, data, callback) {
 
     var results = [];
+    var keyWordsIndex;
+    var text = removeInvalidCharacters(data); // remove invalid characters
+    // 1st para in async.each() is the array of items
+    async.each(words,
+        // 2nd param is the function that each item is passed to
+        function (word, callbackAsync) {
+            // Call an asynchronous function
 
-    data = removeInvalidCharacters(data);
+            dao.getSynonymsWords(word, function (status, synonymsKeyWords) {
+                if (status === 200) {
+
+
+                    for (keyWordsIndex = 0; keyWordsIndex < synonymsKeyWords.length; keyWordsIndex++) {
+                        if (text.indexOf(synonymsKeyWords[keyWordsIndex]) !== -1) { // filters by keywords
+                            results.push(word);
+                        }
+                    }
+
+                    callbackAsync();
+                } else {
+                    return new Error("error in get data from db");
+                }
+            });
+
+        },
+        // 3rd param is the function to call when everything is done
+        function (err) {
+            // All tasks are done now
+            if (err === null) {
+                callback(200, results);
+            } else {
+                callback(500, results);
+            }
+        }
+    );
+
+
+/*    data = removeInvalidCharacters(data);
     for (var i = 0; i < words.length; i++) {
-        if ( data.indexOf(words[i]) != -1) { // check if key words exist in data
+        if (data.indexOf(words[i]) != -1) { // check if key words exist in data
             results.push(words[i]); // add key word to array
         }
     }
-    callback(results);
+    callback(results);*/
 };
 
 exports.searchCvWords = function (words, data, callback) {
@@ -37,7 +73,7 @@ exports.searchCvWords = function (words, data, callback) {
 
             dao.getSynonymsWords(word, function (status, synonymsKeyWords) {
                 if (status === 200) {
-                    
+
                     yearsArr = data.filter(function (exp) {
 
                         var text = removeInvalidCharacters(exp.text); // remove invalid characters
