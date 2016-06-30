@@ -24,10 +24,10 @@ exports.searchJobWords = function (words, data, callback) {
             dao.getSynonymsWords(word, function (status, synonymsKeyWords) {
                 if (status === 200) {
 
-
                     for (keyWordsIndex = 0; keyWordsIndex < synonymsKeyWords.length; keyWordsIndex++) {
                         if (text.indexOf(synonymsKeyWords[keyWordsIndex]) !== -1) { // filters by keywords
                             results.push(word);
+                            break;
                         }
                     }
 
@@ -49,14 +49,6 @@ exports.searchJobWords = function (words, data, callback) {
         }
     );
 
-
-/*    data = removeInvalidCharacters(data);
-    for (var i = 0; i < words.length; i++) {
-        if (data.indexOf(words[i]) != -1) { // check if key words exist in data
-            results.push(words[i]); // add key word to array
-        }
-    }
-    callback(results);*/
 };
 
 exports.searchCvWords = function (words, data, callback) {
