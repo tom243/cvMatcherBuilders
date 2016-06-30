@@ -31,7 +31,7 @@ exports.findIfKeyWordsExistsJOB = function (req, res) {
     if (validation.jobParser(req)) {
 
         parser.searchJobWords(req.body.words, req.body.text, function (status, results) {
-            res.json(status,results);
+            res.status(status).json(results);
         });
 
     } else {

@@ -6,7 +6,7 @@ var dao = require("../dao/dao");
 
 function removeInvalidCharacters(data) {
 
-    return data.toLocaleLowerCase().replace(/[\u2022,\u2023,\u25E6,\u2043,\u2219\/\\,()$~%.!'":*?<>{}]/g, ' ').split(" ");
+    return data.toLocaleLowerCase().replace(/[\u2022,\u2023,\u25E6,\u2043,\u2219\/\\,()\r\n$~%.!'":*?<>{}]/g, ' ').split(" ");
 }
 
 
