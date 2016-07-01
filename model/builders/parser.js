@@ -15,6 +15,11 @@ exports.searchJobWords = function (words, data, callback) {
     var results = [];
     var keyWordsIndex;
     var text = removeInvalidCharacters(data); // remove invalid characters
+    var match = true;
+    var keyWordArr = [];
+    var exists;
+
+    console.log("text" + text);
     // 1st para in async.each() is the array of items
     async.each(words,
         // 2nd param is the function that each item is passed to
@@ -23,14 +28,25 @@ exports.searchJobWords = function (words, data, callback) {
 
             dao.getSynonymsWords(word, function (status, synonymsKeyWords) {
                 if (status === 200) {
-
                     for (keyWordsIndex = 0; keyWordsIndex < synonymsKeyWords.length; keyWordsIndex++) {
-                        if (text.indexOf(synonymsKeyWords[keyWordsIndex]) !== -1) { // filters by keywords
-                            results.push(word);
-                            break;
+                        keyWordArr = synonymsKeyWords[keyWordsIndex].split(" ");
+                        exists = text.indexOf(keyWordArr[0]);
+                        if (exists !== -1) { // filters by keywords
+                            if (keyWordArr.length > 1) {
+                                console.log("keyWordArr" + keyWordArr);
+                                for (var i = 1; i < keyWordArr.length; i++) {
+                                    if (keyWordArr[i] !== text[exists + i]) {
+                                        match = false;
+                                    }
+                                }
+                            }
+                            if (match) {
+                                results.push(word);
+                                break;
+                            }
                         }
                     }
-
+                    match = true;
                     callbackAsync();
                 } else {
                     return new Error("error in get data from db");
@@ -56,6 +72,9 @@ exports.searchCvWords = function (words, data, callback) {
     var yearsArr;
     var results = [];
     var keyWordsIndex;
+    var match = true;
+    var keyWordArr = [];
+    var exists;
 
     // 1st para in async.each() is the array of items
     async.each(words,
@@ -70,8 +89,20 @@ exports.searchCvWords = function (words, data, callback) {
 
                         var text = removeInvalidCharacters(exp.text); // remove invalid characters
                         for (keyWordsIndex = 0; keyWordsIndex < synonymsKeyWords.length; keyWordsIndex++) {
-                            if (text.indexOf(synonymsKeyWords[keyWordsIndex]) !== -1) { // filters by keywords
-                                return true;
+                            keyWordArr = synonymsKeyWords[keyWordsIndex].split(" ");
+                            exists = text.indexOf(keyWordArr[0]);
+                            if (exists !== -1) { // filters by keywords
+                                if (keyWordArr.length > 1) {
+                                    console.log("keyWordArr" + keyWordArr);
+                                    for (var i = 1; i < keyWordArr.length; i++) {
+                                        if (keyWordArr[i] !== text[exists + i]) {
+                                            match = false;
+                                        }
+                                    }
+                                }
+                                if (match) {
+                                    return true;
+                                }
                             }
                         }
                         return false; // if key word not found
@@ -85,6 +116,7 @@ exports.searchCvWords = function (words, data, callback) {
                             years: yearsArr.sum() // sum the years and return the result
                         });
                     }
+                    match = true;
                     callbackAsync();
                 } else {
                     return new Error("error in get data from db");
